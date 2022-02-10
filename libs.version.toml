@@ -28,8 +28,8 @@ okhttp = "4.9.0"
 #图片加载
 coil = "1.4.0"
 #数据库
-room-runtime = "2.3.0"
-room-paging = "2.4.0-rc01"
+room-runtime = "2.4.1"
+room-paging = "2.4.1"
 #测试
 junit = "4.+"
 androidx-junit = "1.1.2"
