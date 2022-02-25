@@ -9,8 +9,8 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 
-private typealias loadFromDb<T> =suspend () -> T?
-private typealias saveToDb<T> =suspend (data: T) -> Unit
+private typealias loadFromDb<T> = suspend () -> T?
+private typealias saveToDb<T> = suspend (data: T) -> Unit
 private typealias api<T> = suspend () -> AppResponse<T>
 
 suspend fun <T> exeRequest(
@@ -47,10 +47,10 @@ suspend fun <T> exeRequest(
 
 
 fun <T> exeRequestFlow(
-    api: api<T>,
     loadFromDb: loadFromDb<T>? = null,
-    saveToDb: saveToDb<T>? = null
-): Flow<Resource<T>> {
+    saveToDb: saveToDb<T>? = null,
+    api: api<T>,
+    ): Flow<Resource<T>> {
     return flow {
         emit(Resource.LoadingResource(loadFromDb?.invoke()))
         emit(exeRequest(api, loadFromDb, saveToDb))

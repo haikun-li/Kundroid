@@ -38,7 +38,7 @@ fun HomeScreen(navController: NavHostController, userName: String?) {
     ) {
         Column {
             Box(modifier = Modifier.weight(1f)) {
-                HomeContent(bottomState)
+                HomeContent(bottomState,navController)
             }
             HomeBottomBar(bottomState)
         }
@@ -64,13 +64,14 @@ fun HomeAppBar(scaffoldState: ScaffoldState) {
 }
 
 @Composable
-fun HomeContent(bottomState: MutableState<BottomState>) {
+fun HomeContent(bottomState: MutableState<BottomState>, navController: NavHostController) {
     when (bottomState.value) {
         BottomState.Recommend -> {
-            RecommendScreen()
+            BoutiqueScreen()
         }
         BottomState.Boutique -> {
-            BoutiqueScreen()
+            RecommendScreen(navController = navController)
+
         }
     }
 }
@@ -80,7 +81,7 @@ fun HomeDrawerContent(
     navController: NavHostController,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    val user by homeViewModel.user.collectAsState()
+    val user by homeViewModel.userInfoStateFlow.collectAsState()
     Column(Modifier.padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             user.apply {

@@ -1,8 +1,6 @@
 #版本号
 [versions]
 #基础环境版本
-gradle = "7.0.3"
-kotlin = "1.5.31"
 compileSdk = "31"
 minSdk = "21"
 targetSdk = "31"
@@ -20,7 +18,7 @@ hilt-navigation-compose = "1.0.0-alpha03"
 #分页
 paging-compose = "1.0.0-alpha14"
 #依赖注入
-hilt-dagger = "2.35"
+hilt-dagger = "2.40.1"
 hilt-viewmodel="1.0.0-alpha01"
 #网络请求
 retrofit = "2.9.0"
@@ -38,8 +36,6 @@ androidx-espresso-core = "3.4.0"
 
 #依赖库
 [libraries]
-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
-build-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 #控件
 material = { module = "com.google.android.material:material", version.ref = "material" }
 constraintlayout = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayout" }

@@ -7,7 +7,6 @@ plugins {
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
-
     defaultConfig {
         applicationId = "com.haikun.kundroid"
         minSdk = libs.versions.minSdk.get().toInt()

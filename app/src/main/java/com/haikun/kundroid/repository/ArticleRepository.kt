@@ -8,14 +8,28 @@ import com.haikun.kundroid.data.Resource
 import com.haikun.kundroid.data.response.ArticleListData
 import com.haikun.kundroid.request.RetrofitService
 import com.haikun.kundroid.request.exeRequest
+import com.haikun.kundroid.request.exeRequestFlow
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class HomeRepository @Inject constructor(private val mService: RetrofitService) {
+class ArticleRepository @Inject constructor(private val mService: RetrofitService) {
 
     fun getArticleList()=Pager(config = PagingConfig(20)){
         ArticleListPageSource(mService)
+    }
+
+    suspend fun collectArticle(id:Int): Flow<Resource<Any>> {
+        return exeRequestFlow{
+            mService.collect(id)
+        }
+    }
+
+    fun unCollectArticle(id: Int): Flow<Resource<Any>> {
+        return exeRequestFlow{
+            mService.unCollect(id)
+        }
     }
 }
 

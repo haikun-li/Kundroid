@@ -1,54 +1,65 @@
 package com.haikun.kundroid.ui.screen.home
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.haikun.kundroid.data.Resource
 import com.haikun.kundroid.data.response.ArticleListData
 import com.haikun.kundroid.data.response.TabTitle
 import com.haikun.kundroid.data.response.UserInfoBean
-import com.haikun.kundroid.repository.HomeRepository
+import com.haikun.kundroid.repository.ArticleRepository
 import com.haikun.kundroid.repository.UserRepository
 import com.haikun.kundroid.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val homeRepository: HomeRepository,private val userRepository: UserRepository) : BaseViewModel() {
+class HomeViewModel @Inject constructor(
+    private val articleRepository: ArticleRepository,
+    private val userRepository: UserRepository
+) : BaseViewModel() {
 
-    val user = MutableStateFlow(UserInfoBean())
+    val userInfoStateFlow  = MutableStateFlow(UserInfoBean())
+    var selectedTabIndex by mutableStateOf(0)
+    val tabTitle by mutableStateOf(
+        mutableListOf(
+            TabTitle("推荐"),
+            TabTitle("项目"),
+            TabTitle("问答"),
+            TabTitle("体系"),
+        )
+    )
 
-    val tabTitle = MutableStateFlow<Resource<List<TabTitle>>>(Resource.EmptyResource())
+    private val flowMap = hashMapOf<Int, Flow<PagingData<ArticleListData>>>()
+
 
 
     init {
-        initUser()
-        initTabTitle()
+        initUserInfo()
     }
 
-    private fun initUser() {
+    private fun initUserInfo() {
         viewModelScope.launch {
-            user.emit(userRepository.userInfoFromDb())
+            userInfoStateFlow.emit(userRepository.userInfoFromDb())
         }
     }
 
-    private fun initTabTitle() {
-        viewModelScope.launch {
-            tabTitle.emit(Resource.LoadingResource(null))
-            delay(1000)
-            tabTitle.emit(Resource.SuccessResource(mutableListOf(TabTitle("帖子"),TabTitle("官方"),TabTitle("赛事"),TabTitle("手游"),TabTitle("云顶"))))
 
+    fun getPagingDataFlow(): Flow<PagingData<ArticleListData>> {
+        val flow = flowMap[selectedTabIndex]
+        return if (flow != null) {
+            flow
+        } else {
+            val pagingDataFlow = articleRepository.getArticleList().flow.cachedIn(viewModelScope)
+            flowMap[selectedTabIndex] = pagingDataFlow
+            pagingDataFlow
         }
     }
 
-    fun getArticleList(): Flow<PagingData<ArticleListData>> {
-        return homeRepository.getArticleList().flow.cachedIn(viewModelScope)
-    }
 
 
 }

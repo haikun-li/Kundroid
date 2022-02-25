@@ -19,6 +19,7 @@ import androidx.paging.compose.LazyPagingItems
 import com.haikun.kundroid.R
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.haikun.kundroid.utils.LogUtil
 
 @Composable
 fun <T : Any> SwipeRefreshList(
@@ -28,11 +29,11 @@ fun <T : Any> SwipeRefreshList(
     val rememberSwipeRefreshState = rememberSwipeRefreshState(isRefreshing = false)
     SwipeRefresh(
         state = rememberSwipeRefreshState,
-        onRefresh = { collectAsLazyPagingItems.refresh() }) {
+        onRefresh = {
+            collectAsLazyPagingItems.refresh() }) {
 
         rememberSwipeRefreshState.isRefreshing =
             collectAsLazyPagingItems.loadState.refresh is LoadState.Loading
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxHeight()
@@ -43,7 +44,9 @@ fun <T : Any> SwipeRefreshList(
             content()
 
             collectAsLazyPagingItems.apply {
+
                 when {
+
                     loadState.append is LoadState.Loading -> {//加载更多时，就在底部显示loading的item
                         item { LoadingItem() }
                     }
@@ -61,15 +64,10 @@ fun <T : Any> SwipeRefreshList(
                                     collectAsLazyPagingItems.retry()
                                 }
                             }
-                        } else {
-                            item {
-                                ErrorItem {
-                                    collectAsLazyPagingItems.retry()
-                                }
-                            }
                         }
                     }
                 }
+
             }
         }
     }
