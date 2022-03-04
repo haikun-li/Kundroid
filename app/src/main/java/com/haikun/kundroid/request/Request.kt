@@ -11,7 +11,7 @@ import java.net.SocketTimeoutException
 
 private typealias loadFromDb<T> = suspend () -> T?
 private typealias saveToDb<T> = suspend (data: T) -> Unit
-private typealias api<T> = suspend () -> AppResponse<T>
+typealias api<T> = suspend () -> AppResponse<T>
 
 suspend fun <T> exeRequest(
     api: api<T>,

@@ -1,23 +1,14 @@
 package com.haikun.kundroid.data.response
 
-data class ArticleList<T>(
-    val curPage: Int,
-    val datas: List<T>,
-    val offset: Int,
-    val over: Boolean,
-    val pageCount: Int,
-    val size: Int,
-    val total: Int
-)
 
-data class ArticleListData(
+data class ProjectListData(
     val apkLink: String,
     val audit: Int,
     val author: String,
     val canEdit: Boolean,
     val chapterId: Int,
     val chapterName: String,
-    var collect: Boolean,
+    val collect: Boolean,
     val courseId: Int,
     val desc: String,
     val descMd: String,
@@ -25,7 +16,6 @@ data class ArticleListData(
     val fresh: Boolean,
     val host: String,
     val id: Int,
-    val originId: Int,
     val link: String,
     val niceDate: String,
     val niceShareDate: String,
@@ -35,7 +25,7 @@ data class ArticleListData(
     val publishTime: Long,
     val realSuperChapterId: Int,
     val selfVisible: Int,
-    val shareDate: Long,
+    val shareDate: Long?,
     val shareUser: String,
     val superChapterId: Int,
     val superChapterName: String,
@@ -47,7 +37,14 @@ data class ArticleListData(
     val zan: Int
 )
 
-data class Tag(
+
+data class ProjectTree(
+    val children: List<Any>,
+    val courseId: Int,
+    val id: Int,
     val name: String,
-    val url: String
+    val order: Int,
+    val parentChapterId: Int,
+    val userControlSetTop: Boolean,
+    val visible: Int
 )

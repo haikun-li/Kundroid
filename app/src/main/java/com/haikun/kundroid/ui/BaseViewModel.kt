@@ -12,7 +12,7 @@ open class BaseViewModel : ViewModel() {
     lateinit var navHostController: NavHostController
     var navUiState by mutableStateOf(NavUiState())
 
-    open fun initUiState(navHostController: NavHostController,vararg jsons: String?) {
+    open fun initUiState(navHostController: NavHostController,vararg jsons: Any?) {
         navUiState = navUiState.copy(navHostController = navHostController)
     }
 }

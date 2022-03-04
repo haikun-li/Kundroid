@@ -1,5 +1,3 @@
-package com.haikun.kundroid.ui.screen.home
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -16,54 +14,45 @@ import androidx.paging.compose.items
 import com.haikun.kundroid.ui.NavHostName
 import com.haikun.kundroid.ui.commonCompose.NetImage
 import com.haikun.kundroid.ui.commonCompose.SwipeRefreshList
+import com.haikun.kundroid.ui.screen.project.ProjectViewModel
 import com.haikun.kundroid.utils.toJson
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-
 @Composable
-fun RecommendScreen(homeViewModel: HomeViewModel = hiltViewModel(), navController: NavHostController) {
-    val tabTitle = homeViewModel.tabTitle
+fun ProjectScreen(viewModel: ProjectViewModel = hiltViewModel(), navController: NavHostController) {
+    val classifyList = viewModel.classify
 
     Column {
-        ScrollableTabRow(
-            selectedTabIndex = homeViewModel.selectedTabIndex, edgePadding = 10.dp,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            tabTitle.forEachIndexed { index, tabTitle ->
-                Tab(
-                    selected = index == homeViewModel.selectedTabIndex,
-                    onClick = {
-                        homeViewModel.selectedTabIndex = index
-                    }) {
-                    Text(tabTitle.title, modifier = Modifier.padding(8.dp))
+        if (classifyList.size > 0) {
+            ScrollableTabRow(
+                selectedTabIndex = viewModel.selectedTabIndex, edgePadding = 10.dp,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                classifyList.forEachIndexed { index, classify ->
+                    Tab(
+                        selected = index == viewModel.selectedTabIndex,
+                        onClick = {
+                            viewModel.selectedTabIndex = index
+                        }) {
+                        Text(classify.name, modifier = Modifier.padding(8.dp))
+                    }
                 }
             }
-        }
 
-        when(homeViewModel.selectedTabIndex){
-            0->{
-                RecommendContent(navController)
-            }
-            1->{
-
-            }else->{
-
-            }
+            ProjectContent(navController)
         }
     }
-
 }
 
-
 @Composable
-fun RecommendContent(navController: NavHostController) {
-
-    val homeViewModel: HomeViewModel = hiltViewModel()
+fun ProjectContent(navController: NavHostController) {
+    val viewModel: ProjectViewModel = hiltViewModel()
 
     val collectAsLazyPagingItems =
-        homeViewModel.getPagingDataFlow().collectAsLazyPagingItems()
+        viewModel.getPagingDataFlow().collectAsLazyPagingItems()
+
     SwipeRefreshList(collectAsLazyPagingItems) {
         items(collectAsLazyPagingItems, key = {
             it.id
@@ -94,7 +83,12 @@ fun RecommendContent(navController: NavHostController) {
                         )
                         Column(Modifier.fillMaxWidth()) {
                             Text(text = it.title, style = MaterialTheme.typography.h6, fontSize = 16.sp)
-                            Text(text = it.desc, style = MaterialTheme.typography.body2, maxLines = 2,overflow= TextOverflow.Ellipsis)
+                            Text(
+                                text = it.desc,
+                                style = MaterialTheme.typography.body2,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
                     }
                 }
@@ -103,4 +97,3 @@ fun RecommendContent(navController: NavHostController) {
         }
     }
 }
-

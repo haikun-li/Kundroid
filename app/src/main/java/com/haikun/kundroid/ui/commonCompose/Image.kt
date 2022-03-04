@@ -20,7 +20,7 @@ fun NetImage(url:String,modifier: Modifier = Modifier,previewPlaceholder:Int= R.
                 error(previewPlaceholder)
                 transformations(CircleCropTransformation())
                 listener(onError = {_,e->
-                    e.printStackTrace()
+                    //e.printStackTrace()
                 })
             }
         ),
@@ -41,7 +41,7 @@ fun CircleNetImage(url:String,modifier: Modifier = Modifier,previewPlaceholder:I
                 error(previewPlaceholder)
                 transformations(CircleCropTransformation())
                 listener(onError = {_,e->
-                    e.printStackTrace()
+                    //e.printStackTrace()
                 })
             }
         ),

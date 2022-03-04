@@ -5,5 +5,6 @@ data class ArticleDetailUiState(
     val title: String,
     val link: String,
     val id: Int,
+    val originId: Int,
     val author: String,
 )

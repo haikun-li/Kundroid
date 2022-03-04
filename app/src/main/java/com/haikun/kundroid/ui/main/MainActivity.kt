@@ -9,6 +9,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.compose.rememberNavController
 import com.haikun.kundroid.ui.theme.SystemUiController
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
+import androidx.core.view.WindowCompat
 import com.haikun.kundroid.ui.AppNavHost
 import com.haikun.kundroid.ui.theme.AppTheme
 import com.haikun.kundroid.ui.theme.AppThemeState
@@ -25,10 +28,13 @@ class MainActivity : ComponentActivity() {
             }
             val systemUiController = remember { SystemUiController(window) }
 
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+
             AppTheme(
                 appTheme = themeState.value,
                 systemUiController = systemUiController
             ) {
+
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
                     AppNavHost(navController, themeState)

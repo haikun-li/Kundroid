@@ -24,11 +24,15 @@ import javax.inject.Inject
 @HiltViewModel
 class ArticleDetailViewModel @Inject constructor(private val articleRepository: ArticleRepository) : BaseViewModel() {
 
-    var articleDetailUiState by mutableStateOf(ArticleDetailUiState(false, "", "", 0, ""))
-    override fun initUiState(navHostController: NavHostController, vararg jsons: String?) {
+    var articleDetailUiState by mutableStateOf(ArticleDetailUiState(false, "", "", 0, 0,""))
+    var ifFromCollect = false
+    override fun initUiState(navHostController: NavHostController, vararg jsons: Any?) {
         super.initUiState(navHostController, *jsons)
+        jsons[1]?.let {
+            ifFromCollect = it as Boolean
+        }
         jsons[0]?.let {
-            val articleListData = fromJson<ArticleListData>(it)
+            val articleListData = fromJson<ArticleListData>(it as String)
             articleListData?.let { data ->
                 articleDetailUiState =
                     articleDetailUiState.copy(
@@ -36,26 +40,29 @@ class ArticleDetailViewModel @Inject constructor(private val articleRepository: 
                         title = data.title,
                         link = data.link,
                         id = data.id,
+                        originId = data.originId,
                         author = data.author
                     )
             }
         }
+
+
     }
 
     fun delCollect() {
         if (articleDetailUiState.isCollect) {
             viewModelScope.launch {
-                articleRepository.unCollectArticle(articleDetailUiState.id).collect {
-                    if (it is Resource.SuccessResource){
-                        articleDetailUiState=articleDetailUiState.copy(isCollect = false)
+                articleRepository.unCollectArticle(articleDetailUiState.id,articleDetailUiState.originId,ifFromCollect).collect {
+                    if (it is Resource.SuccessResource) {
+                        articleDetailUiState = articleDetailUiState.copy(isCollect = false)
                     }
                 }
             }
         } else {
             viewModelScope.launch {
                 articleRepository.collectArticle(articleDetailUiState.id).collect {
-                    if (it is Resource.SuccessResource){
-                        articleDetailUiState=articleDetailUiState.copy(isCollect = true)
+                    if (it is Resource.SuccessResource) {
+                        articleDetailUiState = articleDetailUiState.copy(isCollect = true)
                     }
                 }
 

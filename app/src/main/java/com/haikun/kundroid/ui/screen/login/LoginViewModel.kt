@@ -24,6 +24,7 @@ class LoginViewModel @Inject constructor(private val mUserRepository: UserReposi
         rememberPassword: Boolean,
     ) {
         viewModelScope.launch {
+
             mUserRepository.login(username, password).flatMapLatest {
                 return@flatMapLatest if (it is Resource.SuccessResource) {
                     it.data?.apply {
