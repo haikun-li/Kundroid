@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.haikun.kundroid.R
 import com.haikun.kundroid.data.Resource
+import com.haikun.kundroid.ui.MainSubScreen
 import com.haikun.kundroid.ui.NavHostName
 import com.haikun.kundroid.ui.commonCompose.LesState
 import com.haikun.kundroid.ui.commonCompose.MainButton
@@ -42,7 +43,7 @@ fun LoginScreen(
             LesState(loginState, scaffoldState) {
                 LaunchedEffect(true) {
                     navController.popBackStack()
-                    navController.navigate(NavHostName.HOME_SCREEN)
+                    navController.navigate(NavHostName.MAIN_SCREEN)
                 }
             }
             //顶部图片

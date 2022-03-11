@@ -1,16 +1,14 @@
 package com.haikun.kundroid.ui.screen.main
 
-import ProjectScreen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,19 +17,24 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.haikun.kundroid.R
+import com.haikun.kundroid.ui.AppNavHost
+import com.haikun.kundroid.ui.MainSubScreen
 import com.haikun.kundroid.ui.NavHostName
 import com.haikun.kundroid.ui.commonCompose.CircleNetImage
-import com.haikun.kundroid.ui.screen.home.BottomState
-import com.haikun.kundroid.ui.screen.home.HomeScreen
 import com.haikun.kundroid.ui.screen.home.HomeViewModel
+import com.haikun.kundroid.ui.theme.AppThemeState
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController, themeState: MutableState<AppThemeState>) {
     val scaffoldState = rememberScaffoldState()
-    val bottomState = rememberSaveable {
-        mutableStateOf(BottomState.Home)
+    val bottomState by remember {
+        mutableStateOf(mutableStateListOf(MainSubScreen.Home,MainSubScreen.Project))
     }
+    val selectBottom by remember {
+        mutableStateOf(0)
+    }
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = { MainAppBar(scaffoldState) },
@@ -39,13 +42,11 @@ fun MainScreen(navController: NavHostController) {
             MainDrawerContent(navController)
         },
         drawerBackgroundColor = MaterialTheme.colors.primaryVariant,
-    ) {
-        Column {
-            Box(modifier = Modifier.weight(1f)) {
-                MainContent(bottomState,navController)
-            }
-            MainBottomBar(bottomState)
+        bottomBar = {
+            MainBottomBar(bottomState,selectBottom)
         }
+    ) {
+        AppNavHost(navController, themeState)
     }
 
 }
@@ -67,17 +68,6 @@ fun MainAppBar(scaffoldState: ScaffoldState) {
     })
 }
 
-@Composable
-fun MainContent(bottomState: MutableState<BottomState>, navController: NavHostController) {
-    when (bottomState.value) {
-        BottomState.Home -> {
-            HomeScreen(navController = navController)
-        }
-        BottomState.Project -> {
-            ProjectScreen(navController = navController)
-        }
-    }
-}
 
 @Composable
 fun MainDrawerContent(
@@ -135,17 +125,16 @@ fun MainDrawerContent(
 }
 
 @Composable
-fun MainBottomBar(bottomState: MutableState<BottomState>) {
+fun MainBottomBar(bottomState: SnapshotStateList<MainSubScreen>,selectBottom:Int) {
     BottomNavigation {
-        BottomNavigationItem(selected = true, onClick = {
-            bottomState.value = BottomState.Home
-        }, label = {
-            Text(text = "首页")
-        }, icon = { Icon(imageVector = Icons.Default.Home, contentDescription = null) })
-        BottomNavigationItem(selected = true, onClick = {
-            bottomState.value = BottomState.Project
-        }, label = {
-            Text(text = "项目")
-        }, icon = { Icon(imageVector = Icons.Default.Home, contentDescription = null) })
+        bottomState.forEachIndexed { index, mainSubScreen ->
+            BottomNavigationItem(selected = selectBottom==index, icon = {
+
+            }, onClick = {
+
+            }, label = {
+                Text(mainSubScreen.tabText)
+            })
+        }
     }
 }

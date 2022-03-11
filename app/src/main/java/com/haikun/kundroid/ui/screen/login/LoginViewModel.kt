@@ -26,13 +26,13 @@ class LoginViewModel @Inject constructor(private val mUserRepository: UserReposi
         viewModelScope.launch {
 
             mUserRepository.login(username, password).flatMapLatest {
-                return@flatMapLatest if (it is Resource.SuccessResource) {
+                if (it is Resource.SuccessResource){
                     it.data?.apply {
                         UserConstant.userId = id
                     }
-                    mUserRepository.userInfo()
-                } else {
-                    flow { emit(it) }
+                    return@flatMapLatest mUserRepository.userInfo()
+                }else{
+                    return@flatMapLatest flow<Resource<out Any>> { emit(it) }
                 }
             }.collect {
                 _login.emit(it)

@@ -9,10 +9,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.compose.rememberNavController
 import com.haikun.kundroid.ui.theme.SystemUiController
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
-import androidx.core.view.WindowCompat
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.haikun.kundroid.ui.AppNavHost
+import com.haikun.kundroid.ui.MainSubScreen
+import com.haikun.kundroid.ui.NavHostName
+import com.haikun.kundroid.ui.screen.main.MainScreen
 import com.haikun.kundroid.ui.theme.AppTheme
 import com.haikun.kundroid.ui.theme.AppThemeState
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
             }
             val systemUiController = remember { SystemUiController(window) }
 
-            WindowCompat.setDecorFitsSystemWindows(window, false)
+            //WindowCompat.setDecorFitsSystemWindows(window, false)
 
             AppTheme(
                 appTheme = themeState.value,
@@ -37,8 +38,18 @@ class MainActivity : ComponentActivity() {
 
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
-                    AppNavHost(navController, themeState)
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    when(navBackStackEntry?.destination?.route ?: NavHostName.LOGIN_SCREEN){
+                        MainSubScreen.Home.route,
+                        MainSubScreen.Project.route-> {
+                            MainScreen(navController,themeState)
+                        }
+                        else-> {
+                            AppNavHost(navController, themeState)
+                        }
+                    }
                 }
+
             }
         }
     }

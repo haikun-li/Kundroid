@@ -5,13 +5,14 @@ compileSdk = "31"
 minSdk = "21"
 targetSdk = "31"
 
-material = "1.3.0"
+material = "1.6.0-alpha02"
+material3 = "1.0.0-alpha04"
 constraintlayout = "1.0.0-alpha07"
 swiperefresh = "0.16.1"
 #导航
 navigation = "2.4.0-alpha10"
 #compose相关
-compose = "1.0.5"
+compose = "1.1.1"
 activity-compose = "1.3.1"
 viewmodel-compose = "1.0.0-alpha07"
 hilt-navigation-compose = "1.0.0-alpha03"
@@ -38,6 +39,7 @@ androidx-espresso-core = "3.4.0"
 [libraries]
 #控件
 material = { module = "com.google.android.material:material", version.ref = "material" }
+material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 constraintlayout = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayout" }
 swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "swiperefresh" }
 #compose相关
